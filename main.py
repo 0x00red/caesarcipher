@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import sys
 ls = "abcdefghijklmnopqrstuvwxyz" #string of characters
+capls = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ##capital letters
+capdict = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6, "H": 7, "I": 8, "J": 9, "K": 10, "L": 11, "M": 12, "N": 13, "O": 14, "P": 15, "Q": 16, "R": 17, "S": 18, "T": 19, "U": 20, "V": 21, "W": 22, "X": 23, "Y": 24, "Z": 25}
 punct = "\"'.,!?;:-_+=*" ##punctuation is skipped
 pdict = {"\"": 0, "'": 1, ".": 2, ",": 3, "!": 4, "?": 5, ";": 6, ":": 7, "-": 8, "_": 9, "+": 10, "=": 11, "*": 12} ##dictionary for punctuation
 dict = {"a": 0, "b": 1, "c": 2, "d": 3, "e": 4, "f": 5, "g": 6, "h": 7, "i": 8, "j": 9, "k": 10, "l": 11, "m": 12, "n": 13, "o": 14, "p": 15, "q": 16, "r": 17, "s": 18, "t": 19, "u": 20, "v": 21, "w": 22, "x": 23, "y": 24, "z": 25} #dictionary of letter to index pairing
@@ -10,7 +12,7 @@ input = raw_input ##hack-ish fix since shit wasn't working
 
 ##functions and shit
 
-def encrypt(instring, shift, ls, dict, punct, pdict, numls, numdict): #takes input text, shift, and a list and dictionary(for language support)
+def encrypt(instring, shift, ls, dict, punct, pdict, numls, numdict, capls, capdict): #takes input text, shift, and a list and dictionary(for language support)
 	instring = instring.split()
 	out = ""
 	for word in instring:
@@ -20,6 +22,9 @@ def encrypt(instring, shift, ls, dict, punct, pdict, numls, numdict): #takes inp
 				continue
 			if letter in numls:
 				out = out + numls[(numdict[letter] + shift) % len(numls)]
+				continue
+			if letter in capls:
+				out = out + capls[(capdict[letter] + shift) % len(capls)]
 				continue
 			out = out + ls[(dict[letter] + shift) % len(ls)]
 		out = out + " "
@@ -36,6 +41,9 @@ def decrypt(cipher, shift, ls, dict, punct, pdict, numls, numdict): #takes ciphe
 				continue
 			if letter in numls:
 				out = out + numls[(numdict[letter] - shift) % len(numls)]
+				continue
+			if letter in capls:
+				out = out + capls[(capdict[letter] - shift) % len(capls)]
 				continue
 			out = out + ls[(dict[letter] - shift) % len(ls)]
 		out = out + " "
@@ -60,7 +68,6 @@ while(1): ##makes sure the user selects a valid option
 ##takes input and cipher key
 print("Input text: ")
 instring = input()
-instring = instring.lower()
 print("Input shift: ")
 shift = input()
 try:
@@ -72,7 +79,7 @@ except:
 ##does encryption or decryption and posts output
 if eord[0] == "e":
 	try:
-		print(encrypt(instring, shift, ls, dict, punct, pdict, numls, numdict))
+		print(encrypt(instring, shift, ls, dict, punct, pdict, numls, numdict, capls, capdict))
 	except:
 		print("Only alphabetical characters, punctuation, and whitespace allowed.")
 elif eord[0] == "d":
