@@ -51,9 +51,12 @@ def decrypt(cipher, shift, ls, dict, punct, pdict, numls, numdict): #takes ciphe
 
 
 ##start program
-
+fopen = 0
 while(1): ##makes sure the user selects a valid option
-	print("[E]ncrypt or [D]ecrypt? ")
+	if fopen == 0:
+		print("[E]ncrypt, [D]ecrypt, or [F]ile? ")
+	else:
+		print("[E]ncrypt, [D]ecrypt, or [T]ext? ")
 	eord = input()
 	if len(eord) == 0:
 		continue
@@ -62,12 +65,29 @@ while(1): ##makes sure the user selects a valid option
 		break
 	elif eord[0] == "d":
 		break
+	elif eord[0] == "f":
+		fopen = 1
+		continue
+	elif eord[0] == "t":
+		fopen = 0
+		continue
 	else:
 		continue
 
 ##takes input and cipher key
-print("Input text: ")
-instring = input()
+if fopen == 0:
+	print("Input text: ")
+	instring = input()
+else:
+	print("File: ")
+	file = input()
+	try:
+		f = open(file,"r")
+		instring = f.read()
+		f.close()
+	except:
+		print("Error opening " + file)
+		sys.exit(0)
 print("Input shift: ")
 shift = input()
 try:
